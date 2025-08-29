@@ -237,28 +237,28 @@ bc2_bcon_exp = bin_to_expression(bc2_bcon_average);% - 100;
 %"From 100k_SpectR_BC_Nanopore_Export.mat", Load "BC1_conv", "BC2_conv",
 %and "barcoded_variants" (variables provided upon request)
 AB_100k_variants = barcoded_variants; clear barcoded_variants
-AB_reporter_ass_final = AB_100k_variants(:, 6:8);
-AB_synTF_ass_final = AB_100k_variants(:, 1:5);
+AB_reporter_assign_final = AB_100k_variants(:, 6:8);
+AB_synTF_assign_final = AB_100k_variants(:, 1:5);
 BC1_abfinal_final = BC1_conv; BC2_abfinal_final = BC2_conv;
 
-reporter_ass_final_final = AB_reporter_ass_final(sum(AB_reporter_ass_final > 0, 2) == size(AB_reporter_ass_final, 2) & sum(AB_synTF_ass_final > 0, 2) == size(AB_synTF_ass_final, 2), :);
-synTF_ass_final_final = AB_synTF_ass_final(sum(AB_reporter_ass_final > 0, 2) == size(AB_reporter_ass_final, 2) & sum(AB_synTF_ass_final > 0, 2) == size(AB_synTF_ass_final, 2), :);
-BC1_conv = BC1_abfinal_final(sum(AB_reporter_ass_final > 0, 2) == size(AB_reporter_ass_final, 2) & sum(AB_synTF_ass_final > 0, 2) == size(AB_synTF_ass_final, 2), :);
-BC2_conv = BC2_abfinal_final(sum(AB_reporter_ass_final > 0, 2) == size(AB_reporter_ass_final, 2) & sum(AB_synTF_ass_final > 0, 2) == size(AB_synTF_ass_final, 2), :);
+reporter_assign_final_final = AB_reporter_assign_final(sum(AB_reporter_assign_final > 0, 2) == size(AB_reporter_assign_final, 2) & sum(AB_synTF_assign_final > 0, 2) == size(AB_synTF_assign_final, 2), :);
+synTF_assign_final_final = AB_synTF_assign_final(sum(AB_reporter_assign_final > 0, 2) == size(AB_reporter_assign_final, 2) & sum(AB_synTF_assign_final > 0, 2) == size(AB_synTF_assign_final, 2), :);
+BC1_conv = BC1_abfinal_final(sum(AB_reporter_assign_final > 0, 2) == size(AB_reporter_assign_final, 2) & sum(AB_synTF_assign_final > 0, 2) == size(AB_synTF_assign_final, 2), :);
+BC2_conv = BC2_abfinal_final(sum(AB_reporter_assign_final > 0, 2) == size(AB_reporter_assign_final, 2) & sum(AB_synTF_assign_final > 0, 2) == size(AB_synTF_assign_final, 2), :);
 
 BC1_abfinal_final = BC1_conv; BC2_abfinal_final = BC2_conv;
-AB_reporter_ass_final = reporter_ass_final_final;
-AB_synTF_ass_final = synTF_ass_final_final;
-clear BC1_conv; clear BC2_conv; clear reporter_ass_final_final;
-clear synTF_ass_final_final
+AB_reporter_assign_final = reporter_assign_final_final;
+AB_synTF_assign_final = synTF_assign_final_final;
+clear BC1_conv; clear BC2_conv; clear reporter_assign_final_final;
+clear synTF_assign_final_final
 
-eu_ABass_final = AB_synTF_ass_final(:, 1) + 4.*(AB_synTF_ass_final(:, 2) - 1) + 16.*(AB_synTF_ass_final(:, 3) - 1) + 80.*(AB_synTF_ass_final(:, 4) - 1) + 240.*(AB_synTF_ass_final(:, 5) - 1) + 2880*(AB_reporter_ass_final(:, 1) - 1) + 11520*(AB_reporter_ass_final(:, 2) - 1) + 34560*(AB_reporter_ass_final(:, 3) - 1);
+eu_ABassign_final = AB_synTF_assign_final(:, 1) + 4.*(AB_synTF_assign_final(:, 2) - 1) + 16.*(AB_synTF_assign_final(:, 3) - 1) + 80.*(AB_synTF_assign_final(:, 4) - 1) + 240.*(AB_synTF_assign_final(:, 5) - 1) + 2880*(AB_reporter_assign_final(:, 1) - 1) + 11520*(AB_reporter_assign_final(:, 2) - 1) + 34560*(AB_reporter_assign_final(:, 3) - 1);
 
 [un_nanoporeabBC1, ~, b] = unique(BC1_abfinal_final);
 BC1ab_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BC1ab_counts_mapping)
-    j = eu_ABass_final(b == i);
+    j = eu_ABassign_final(b == i);
     BC1ab_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode is linked to
     if mod(i, 10000) == 0
         disp(i)
@@ -269,7 +269,7 @@ end
 BC2ab_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BC2ab_counts_mapping)
-    j = eu_ABass_final(b == i);
+    j = eu_ABassign_final(b == i);
     BC2ab_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode 2 is linked to
     if mod(i, 10000) == 0
         disp(i)
@@ -289,16 +289,16 @@ end
 BCall_abcounts_mapping = accumarray(b, 1);
 
 for i = 1:length(BCall_abcounts_mapping)
-    j = eu_ABass_final(b == i);
+    j = eu_ABassign_final(b == i);
     BCall_abcounts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode is linked to
     if mod(i, 10000) == 0
         disp(i)
     end
 end
 
-AB_off_nanopore = zeros(size(AB_reporter_ass_final, 1), 1);
-AB_on_nanopore = zeros(size(AB_reporter_ass_final, 1), 1);
-AB_read_char = zeros(size(AB_reporter_ass_final, 1), 3);
+AB_off_nanopore = zeros(size(AB_reporter_assign_final, 1), 1);
+AB_on_nanopore = zeros(size(AB_reporter_assign_final, 1), 1);
+AB_read_char = zeros(size(AB_reporter_assign_final, 1), 3);
 
 for i = 1:length(AB_off_nanopore)
     if mod(i, 10000) == 0
@@ -337,29 +337,29 @@ end
 %"From 100k_SpectR_BC_Nanopore_Export.mat", Load "BC1_conv", "BC2_conv",
 %and "barcoded_variants" (variables provided upon request)
 BC_100k_variants = barcoded_variants; clear barcoded_variants
-BC_reporter_ass_final = BC_100k_variants(:, 6:8);
-BC_synTF_ass_final = BC_100k_variants(:, 1:5);
+BC_reporter_assign_final = BC_100k_variants(:, 6:8);
+BC_synTF_assign_final = BC_100k_variants(:, 1:5);
 BC1_bcfinal_final = BC1_conv; clear BC1_conv
 BC2_bcfinal_final = BC2_conv; clear BC2_conv
 
-reporter_ass_final_final = BC_reporter_ass_final(sum(BC_reporter_ass_final > 0, 2) == size(BC_reporter_ass_final, 2) & sum(BC_synTF_ass_final > 0, 2) == size(BC_synTF_ass_final, 2), :);
-synTF_ass_final_final = BC_synTF_ass_final(sum(BC_reporter_ass_final > 0, 2) == size(BC_reporter_ass_final, 2) & sum(BC_synTF_ass_final > 0, 2) == size(BC_synTF_ass_final, 2), :);
-BC1_conv = BC1_bcfinal_final(sum(BC_reporter_ass_final > 0, 2) == size(BC_reporter_ass_final, 2) & sum(BC_synTF_ass_final > 0, 2) == size(BC_synTF_ass_final, 2), :);
-BC2_conv = BC2_bcfinal_final(sum(BC_reporter_ass_final > 0, 2) == size(BC_reporter_ass_final, 2) & sum(BC_synTF_ass_final > 0, 2) == size(BC_synTF_ass_final, 2), :);
+reporter_assign_final_final = BC_reporter_assign_final(sum(BC_reporter_assign_final > 0, 2) == size(BC_reporter_assign_final, 2) & sum(BC_synTF_assign_final > 0, 2) == size(BC_synTF_assign_final, 2), :);
+synTF_assign_final_final = BC_synTF_assign_final(sum(BC_reporter_assign_final > 0, 2) == size(BC_reporter_assign_final, 2) & sum(BC_synTF_assign_final > 0, 2) == size(BC_synTF_assign_final, 2), :);
+BC1_conv = BC1_bcfinal_final(sum(BC_reporter_assign_final > 0, 2) == size(BC_reporter_assign_final, 2) & sum(BC_synTF_assign_final > 0, 2) == size(BC_synTF_assign_final, 2), :);
+BC2_conv = BC2_bcfinal_final(sum(BC_reporter_assign_final > 0, 2) == size(BC_reporter_assign_final, 2) & sum(BC_synTF_assign_final > 0, 2) == size(BC_synTF_assign_final, 2), :);
 
 BC1_bcfinal_final = BC1_conv; BC2_bcfinal_final = BC2_conv;
-BC_reporter_ass_final = reporter_ass_final_final;
-BC_synTF_ass_final = synTF_ass_final_final;
-clear BC1_conv; clear BC2_conv; clear reporter_ass_final_final;
-clear synTF_ass_final_final
+BC_reporter_assign_final = reporter_assign_final_final;
+BC_synTF_assign_final = synTF_assign_final_final;
+clear BC1_conv; clear BC2_conv; clear reporter_assign_final_final;
+clear synTF_assign_final_final
 
-eu_BCass_final = BC_synTF_ass_final(:, 1) + 4.*(BC_synTF_ass_final(:, 2) - 1) + 16.*(BC_synTF_ass_final(:, 3) - 1) + 80.*(BC_synTF_ass_final(:, 4) - 1) + 240.*(BC_synTF_ass_final(:, 5) - 1) + 2880*(BC_reporter_ass_final(:, 1) - 1) + 11520*(BC_reporter_ass_final(:, 2) - 1) + 34560*(BC_reporter_ass_final(:, 3) - 1);
+eu_BCassign_final = BC_synTF_assign_final(:, 1) + 4.*(BC_synTF_assign_final(:, 2) - 1) + 16.*(BC_synTF_assign_final(:, 3) - 1) + 80.*(BC_synTF_assign_final(:, 4) - 1) + 240.*(BC_synTF_assign_final(:, 5) - 1) + 2880*(BC_reporter_assign_final(:, 1) - 1) + 11520*(BC_reporter_assign_final(:, 2) - 1) + 34560*(BC_reporter_assign_final(:, 3) - 1);
 
 [un_nanoporebcBC1, ~, b] = unique(BC1_bcfinal_final);
 BC1bc_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BC1bc_counts_mapping)
-    j = eu_BCass_final(b == i);
+    j = eu_BCassign_final(b == i);
     BC1bc_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode is linked to
     if mod(i, 10000) == 0
         disp(i)
@@ -370,7 +370,7 @@ end
 BC2bc_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BC2bc_counts_mapping)
-    j = eu_BCass_final(b == i);
+    j = eu_BCassign_final(b == i);
     BC2bc_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode 2 is linked to
     if mod(i, 10000) == 0
         disp(i)
@@ -390,16 +390,16 @@ end
 BCall_bccounts_mapping = accumarray(b, 1);
 
 for i = 1:length(BCall_bccounts_mapping)
-    j = eu_BCass_final(b == i);
+    j = eu_BCassign_final(b == i);
     BCall_bccounts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode is linked to
     if mod(i, 10000) == 0
         disp(i)
     end
 end
 
-BC_off_nanopore = zeros(size(BC_reporter_ass_final, 1), 1);
-BC_on_nanopore = zeros(size(BC_reporter_ass_final, 1), 1);
-BC_read_char = zeros(size(BC_reporter_ass_final, 1), 3);
+BC_off_nanopore = zeros(size(BC_reporter_assign_final, 1), 1);
+BC_on_nanopore = zeros(size(BC_reporter_assign_final, 1), 1);
+BC_read_char = zeros(size(BC_reporter_assign_final, 1), 3);
 
 for i = 1:length(BC_off_nanopore)
     if mod(i, 10000) == 0
@@ -438,12 +438,12 @@ end
 ordered_eu_expAB = zeros(103680, 3);
 ordered_eu_expBC = zeros(103680, 3);
 
-ABeu_ordered_ass_split = zeros(103680, 8);
-ABeu_ordered_ass_split(:, 1) = repmat((1:4)', 103680/4, 1);
-ABeu_ordered_ass_split(:, 2) = repmat([ones(1, 4), 2*ones(1, 4), 3*ones(1, 4), 4*ones(1, 4)]', 103680/16, 1);
-ABeu_ordered_ass_split(:, 3) = repmat((1:4)', 103680/4, 1);
-ABeu_ordered_ass_split(:, 4) = repmat((1:4)', 103680/4, 1);
-ABeu_ordered_ass_split(:, 5) = repmat((1:4)', 103680/4, 1);
+ABeu_ordered_assign_split = zeros(103680, 8);
+ABeu_ordered_assign_split(:, 1) = repmat((1:4)', 103680/4, 1);
+ABeu_ordered_assign_split(:, 2) = repmat([ones(1, 4), 2*ones(1, 4), 3*ones(1, 4), 4*ones(1, 4)]', 103680/16, 1);
+ABeu_ordered_assign_split(:, 3) = repmat((1:4)', 103680/4, 1);
+ABeu_ordered_assign_split(:, 4) = repmat((1:4)', 103680/4, 1);
+ABeu_ordered_assign_split(:, 5) = repmat((1:4)', 103680/4, 1);
 
 for i = 1:3
     for j = 1:3
@@ -453,7 +453,7 @@ for i = 1:3
                     for n = 1:5
                         for o = 1:4
                             for p = 1:4
-                                ABeu_ordered_ass_split(p + (o-1)*4 + (n-1)*16 + (m-1)*80 + (l-1)*240 + (k-1)*2880 + (j-1)*11520 + (i-1)*34560, :) = [p o n m l k j i];
+                                ABeu_ordered_assign_split(p + (o-1)*4 + (n-1)*16 + (m-1)*80 + (l-1)*240 + (k-1)*2880 + (j-1)*11520 + (i-1)*34560, :) = [p o n m l k j i];
                             end
                         end
                     end
@@ -467,8 +467,8 @@ for i = 1:size(ordered_eu_expAB, 1)
     if mod(i, 1000) == 0
         disp(i)
     end
-    c = AB_off_nanopore(eu_ABass_final == i & AB_read_char(:, 3) == 1);
-    d = AB_on_nanopore(eu_ABass_final == i & AB_read_char(:, 3) == 1);
+    c = AB_off_nanopore(eu_ABassign_final == i & AB_read_char(:, 3) == 1);
+    d = AB_on_nanopore(eu_ABassign_final == i & AB_read_char(:, 3) == 1);
     a = c(~isnan(c)); b = d(~isnan(d));
     if ~isempty(a) && ~isempty(b)
             a = mean(a);
@@ -483,14 +483,14 @@ end
 
 ordered_eu_expAB(ordered_eu_expAB(:, 1) > 0, 3) = (ordered_eu_expAB(ordered_eu_expAB(:, 1) > 0, 2) - 200)./(ordered_eu_expAB(ordered_eu_expAB(:, 1) > 0, 1) - 200);
 
-BCeu_ordered_ass_split = ABeu_ordered_ass_split;
+BCeu_ordered_assign_split = ABeu_ordered_assign_split;
 
 for i = 1:size(ordered_eu_expBC, 1)
     if mod(i, 1000) == 0
         disp(i)
     end
-    c = BC_off_nanopore(eu_BCass_final == i & BC_read_char(:, 3) == 1);
-    d = BC_on_nanopore(eu_BCass_final == i & BC_read_char(:, 3) == 1);
+    c = BC_off_nanopore(eu_BCassign_final == i & BC_read_char(:, 3) == 1);
+    d = BC_on_nanopore(eu_BCassign_final == i & BC_read_char(:, 3) == 1);
     a = c(~isnan(c) & ~isnan(d)); b = d(~isnan(c) & ~isnan(d));
     if ~isempty(a) && ~isempty(b)
             a = mean(a);
