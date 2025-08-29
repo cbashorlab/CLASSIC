@@ -204,7 +204,7 @@ for i = 1:length(bc2_bin_averages_404)
     end
 end
 
-%% Now we map illumina data to variants using the barcodes from illumina and nanopore indexing
+%% Map illumina data to variants using the barcodes from illumina and nanopore indexing
 
 %load('pKR402_nanopore_data.mat') 
 %load('pKR402_nanopore_data.mat') %Variables provided separately, upon request
