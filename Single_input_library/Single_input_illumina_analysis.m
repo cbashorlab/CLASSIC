@@ -1,5 +1,8 @@
 clear
 clc
+
+%% Extract barcodes
+
 %The illumina data contains bin/sample specific barcodes in reads 1 and 2,
 %which we will extract, followed by extracting the variant specific
 %barcodes and their counts in each of the sample bins
