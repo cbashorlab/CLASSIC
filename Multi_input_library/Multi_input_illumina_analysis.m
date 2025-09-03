@@ -235,20 +235,20 @@ bc2_on_exp = bin_to_expression(bc2_on_average);% - 100;
 %from "Reads_all_combined.mat", Load "BC1_conv_all", "BC2_conv_all",
 %and "barcoded_variants_all_all" (variables provided upon request)
 Sub_1M_variants = barcoded_variants_all_all; clear barcoded_variants_all_all
-reporter_ass_final = Sub_1M_variants(:, 1:3);
-synTF_ass_final = Sub_1M_variants(:, 4:11);
+reporter_assign_final = Sub_1M_variants(:, 1:3);
+synTF_assign_final = Sub_1M_variants(:, 4:11);
 orientation_final = Sub_1M_variants(:, 12);
 BC1_final_final = BC1_conv_all; BC2_final_final = BC2_conv_all;
 
 clear BC1_conv_all; clear BC2_conv_all;
 
-eu_ass_final = Sub_1M_variants(:, 1) + 3.*(Sub_1M_variants(:, 2) - 1) + 12.*(Sub_1M_variants(:, 3) - 1) + 24.*(Sub_1M_variants(:, 4) - 1) + 72.*(Sub_1M_variants(:, 5) - 1) + 288.*(Sub_1M_variants(:, 6) - 1) + 576.*(Sub_1M_variants(:, 7) - 1) + 2304.*(Sub_1M_variants(:, 8) - 1) + 6912.*(Sub_1M_variants(:, 9) - 1) + 27648.*(Sub_1M_variants(:, 10) - 1) + 55296.*(Sub_1M_variants(:, 11) - 1) + 221184.*(Sub_1M_variants(:, 12) - 1);
+eu_assign_final = Sub_1M_variants(:, 1) + 3.*(Sub_1M_variants(:, 2) - 1) + 12.*(Sub_1M_variants(:, 3) - 1) + 24.*(Sub_1M_variants(:, 4) - 1) + 72.*(Sub_1M_variants(:, 5) - 1) + 288.*(Sub_1M_variants(:, 6) - 1) + 576.*(Sub_1M_variants(:, 7) - 1) + 2304.*(Sub_1M_variants(:, 8) - 1) + 6912.*(Sub_1M_variants(:, 9) - 1) + 27648.*(Sub_1M_variants(:, 10) - 1) + 55296.*(Sub_1M_variants(:, 11) - 1) + 221184.*(Sub_1M_variants(:, 12) - 1);
 
 [un_nanoporeBC1, ~, b] = unique(BC1_final_final);
 BC1_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BC1_counts_mapping)
-    j = eu_ass_final(b == i);
+    j = eu_assign_final(b == i);
     BC1_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode is linked to
     if mod(i, 10000) == 0
         disp(i)
@@ -259,7 +259,7 @@ end
 BC2_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BC2_counts_mapping)
-    j = eu_ass_final(b == i);
+    j = eu_assign_final(b == i);
     BC2_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode 2 is linked to
     if mod(i, 10000) == 0
         disp(i)
@@ -279,18 +279,18 @@ end
 BCall_counts_mapping = accumarray(b, 1);
 
 for i = 1:length(BCall_counts_mapping)
-    j = eu_ass_final(b == i);
+    j = eu_assign_final(b == i);
     BCall_counts_mapping(i, 2) = length(unique(j)); %Number of EUs the barcode is linked to
     if mod(i, 10000) == 0
         disp(i)
     end
 end
 
-off_nanopore = zeros(size(reporter_ass_final, 1), 1);
-oht_nanopore = zeros(size(reporter_ass_final, 1), 1);
-gzv_nanopore = zeros(size(reporter_ass_final, 1), 1);
-on_nanopore = zeros(size(reporter_ass_final, 1), 1);
-read_char = zeros(size(reporter_ass_final, 1), 3);
+off_nanopore = zeros(size(reporter_assign_final, 1), 1);
+oht_nanopore = zeros(size(reporter_assign_final, 1), 1);
+gzv_nanopore = zeros(size(reporter_assign_final, 1), 1);
+on_nanopore = zeros(size(reporter_assign_final, 1), 1);
+read_char = zeros(size(reporter_assign_final, 1), 3);
 
 for i = 1:length(off_nanopore)
     if mod(i, 1000) == 0
@@ -333,7 +333,7 @@ end
 %% Map illumina data to variants using the barcodes from illumina and nanopore indexing
 
 ordered_eu_exp = zeros(1327104, 12);
-eu_ordered_ass_split = zeros(1327104, 12);
+eu_ordered_assign_split = zeros(1327104, 12);
 
 for i = 1:6
     for j = 1:4
@@ -347,7 +347,7 @@ for i = 1:6
                                     for r = 1:2
                                         for s = 1:4
                                             for t = 1:3
-                                                eu_ordered_ass_split(t + (s-1)*3 + (r-1)*12 + (q-1)*24 + (p-1)*72 + (o-1)*288 + (n-1)*576 + (m-1)*2304 + (l-1)*6912 + (k-1)*27648 + (j-1)*55296 + (i-1)*221184, :) = [t s r q p o n m l k j i];
+                                                eu_ordered_assign_split(t + (s-1)*3 + (r-1)*12 + (q-1)*24 + (p-1)*72 + (o-1)*288 + (n-1)*576 + (m-1)*2304 + (l-1)*6912 + (k-1)*27648 + (j-1)*55296 + (i-1)*221184, :) = [t s r q p o n m l k j i];
                                             end
                                         end
                                     end
@@ -365,10 +365,10 @@ for i = 1:size(ordered_eu_exp, 1)
     if mod(i, 1000) == 0
         disp(i)
     end
-    e = off_nanopore(eu_ass_final == i & read_char(:, 2) == 12);
-    f = oht_nanopore(eu_ass_final == i & read_char(:, 2) == 12);
-    g = gzv_nanopore(eu_ass_final == i & read_char(:, 2) == 12);
-    h = on_nanopore(eu_ass_final == i & read_char(:, 2) == 12);
+    e = off_nanopore(eu_assign_final == i & read_char(:, 2) == 12);
+    f = oht_nanopore(eu_assign_final == i & read_char(:, 2) == 12);
+    g = gzv_nanopore(eu_assign_final == i & read_char(:, 2) == 12);
+    h = on_nanopore(eu_assign_final == i & read_char(:, 2) == 12);
     a = e(~isnan(e)); b = f(~isnan(f)); c = g(~isnan(g)); d = h(~isnan(h));
     w = zeros(1, 4);
     if ~isempty(a)
